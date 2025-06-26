@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>💜생일 축하해💙</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to top, #a7d9fd 0%, #35abff 100%);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        
+        #candyGame {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #candy {
+            font-size: 100px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        
+        #candy:active {
+            transform: scale(0.9);
+        }
+        
+        #candyHint {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        #candyMessage {
+            margin-top: 20px;
+            font-size: 2rem;
+            color: #ff4081;
+            font-weight: bold;
+            display: none;
+            animation: pop 0.6s ease;
+        }
+        
+        @keyframes pop {
+            0% {
+                transform: scale(0.2);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        h1,
+        h2 {
+            color: rgb(39, 38, 38);
+            text-align: center;
+        }
+        
+        h2 {
+            margin-bottom: 70px;
+        }
+        
+        .countdown-wrapper {
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .countdown-box {
+            background: linear-gradient(to bottom, #5696fd, #c2e9fb);
+            color: #1b1b2f;
+            border-radius: 12px;
+            width: 70px;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+        
+        .time {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .label {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            color: #333;
+        }
+        
+        .colon {
+            font-size: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 50px;
+            height: 70px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 40% 40%;
+            box-shadow: inset -5px -10px 15px rgba(255, 255, 255, 0.7), inset 5px 10px 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 0.9;
+            animation: rise 10s linear infinite;
+            cursor: default;
+            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+        }
+        
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 15px;
+            background: #000000;
+            border-radius: 2px;
+            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+        }
+        
+        @keyframes rise {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-120vh) translateX(30px);
+            }
+        }
+        
+        #cake {
+            position: relative;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+        
+        #candles {
+            width: 100px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            margin-top: -40px;
+        }
+        
+        .candle {
+            position: relative;
+            width: 10px;
+            height: 60px;
+            background: linear-gradient(to top, #ffb347, #ffcc33);
+            border-radius: 2px;
+            margin: 0 5px;
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.6);
+        }
+        
+        .flame {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 15px;
+            background: radial-gradient(ellipse at center, #fff176 0%, #ffa726 70%, transparent 100%);
+            border-radius: 50% 50% 50% 50%;
+            animation: flicker 0.15s infinite;
+            opacity: 0.9;
+            box-shadow: 0 0 8px 4px rgba(255, 165, 0, 0.5);
+        }
+        
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.9;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(0.95);
+                opacity: 0.8;
+            }
+        }
+        
+        #blowBtn {
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        #message {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #555;
+            display: none;
+        }
+        
+        #birthdayContent {
+            display: none;
+        }
+        /* Стили меню вкладок */
+        
+        #tabsMenu {
+            width: 320px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .tabs {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+        
+        .tabs .tab {
+            padding: 8px 15px;
+            background: #5696fd;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .tabs .tab.active {
+            background: #1b1b2f;
+        }
+        
+        .tab-content {
+            background: #c2e9fb;
+            border-radius: 12px;
+            padding: 15px;
+            color: #1b1b2f;
+            display: none;
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        #fortuneBox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        #categoryButtons button {
+            background-color: #5696fd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        #categoryButtons button:hover {
+            background-color: #1b1b2f;
+        }
+        
+        #fortuneResult {
+            font-size: 1.2rem;
+            color: #333;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-height: 60px;
+            text-align: center;
+            max-width: 300px;
+        }
+        
+        #tabMenu {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background-color: #6699ff;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tab.active {
+            background-color: #111;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>안뇨용!~ 생일 맞춰서 웹사이트 만들어봤지롱~! </h1>
+    <h2>7월 16일에 들어가면 작은 이벤트 받을 수 있엉</h2>
+
+    <div class="countdown-wrapper">
+        <div class="countdown-box">
+            <div class="time" id="days">00</div>
+            <div class="label">DAY</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="countdown-box">
+            <div class="time" id="hours">00</div>
+            <div class="label">HOUR</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="countdown-box">
+            <div class="time" id="minutes">00</div>
+            <div class="label">MINUTE</div>
+        </div>
+        <div class="colon">:</div>
+        <div class="countdown-box">
+            <div class="time" id="seconds">00</div>
+            <div class="label">SECOND</div>
+        </div>
+    </div>
+
+    <div id="birthdayContent">
+        <div class="content-wrapper">
+
+            <!-- Шарики -->
+            <div class="balloon" style="left: 20%; top:90%; background-color: #ff5e57;"></div>
+            <div class="balloon" style="left: 40%; top:90%; background-color: #ffb142;"></div>
+            <div class="balloon" style="left: 60%; top:90%; background-color: #34ace0;"></div>
+            <div class="balloon" style="left: 10%; background-color: #8cd933;"></div>
+            <div class="balloon" style="left: 30%; background-color: #33d9b2;"></div>
+            <div class="balloon" style="left: 50%; background-color: #d971ff;"></div>
+            <div class="balloon" style="left: 70%; background-color: #d93370;"></div>
+            <div class="balloon" style="left: 80%; top:90%; background-color: #f6e607;"></div>
+            <div class="balloon" style="left: 90%; background-color: #0c20ff;"></div>
+
+            <!-- Торт -->
+            <div id="cake">
+                <div id="candles">
+                    <div class="candle">
+                        <div class="flame"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame"></div>
+                    </div>
+                </div>
+
+                <img src="cake.png" alt="Cake" width="200" />
+            </div>
+
+            <button id="blowBtn">🎂 원하는 걸 생각하면서 촛불 끝다</button>
+            <div id="message">✨ 소원 done! ✨</div>
+        </div>
+    </div>
+
+
+    <!-- Меню вкладок -->
+    <div id="tabsMenu" style="display:none;">
+        <nav>
+            <ul class="tabs">
+                <li class="tab active" data-tab="miniGame">미니게임</li>
+                <li class="tab" data-tab="fortune">오늘의 운세</li>
+                <li class="tab" data-tab="congrats">축하</li>
+            </ul>
+        </nav>
+        <div id="miniGame" class="tab-content">
+
+            <div id="candyGame">
+                <div id="candy">🍬</div>
+                <div id="candyHint">남은 횟수: 5</div>
+
+                <div id="candyMessage">이겼다! 🎉</div>
+            </div>
+        </div>
+        <div id="fortune" class="tab-content" style="display: none;">
+
+            <div id="fortuneBox">
+                <div id="categoryButtons">
+                    <button data-type="love">❤️ 사랑운</button>
+                    <button data-type="money">💰 금전운</button>
+                    <button data-type="health">💪 건강운</button>
+                </div>
+                <div id="fortuneResult">오늘의 운세를 확인해보세요!</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="congrats">
+            <p style="margin-top: 10px;  color: #555;">사랑하는 오빠에게<br/> 오늘은 오빠의 특별한 날이야.<br/> 내 마음 가득 담아 축하해!<br/> 오빠의 웃음이 항상 빛나길 바라며,<br/> 우리 함께 만들어갈 모든 순간이 행복으로 가득하길.<br/><br/> 늘 고마워, 그리고 사랑해. 💞</p>
+        </div>
+    </div>
+
+    <script>
+        const countdownWrapper = document.querySelector(".countdown-wrapper");
+        const birthdayContent = document.getElementById("birthdayContent");
+        const tabsMenu = document.getElementById("tabsMenu");
+
+        const targetDate = new Date("2025-07-16T00:00:00").getTime();
+
+        const interval = setInterval(() => {
+            // Для теста: поставь здесь текущее время
+            // const now = new Date("2025-07-16T00:00:01").getTime();
+            // Для реального использования — раскомментируй:
+            const now = new Date().getTime();
+
+            const distance = targetDate - now;
+
+            if (distance <= 0) {
+                clearInterval(interval);
+                countdownWrapper.style.display = "none";
+                birthdayContent.style.display = "block";
+                tabsMenu.style.display = "block"; // показываем меню вкладок
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = String(days).padStart(2, "0");
+            document.getElementById("hours").innerText = String(hours).padStart(2, "0");
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, "0");
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, "0");
+        }, 1000);
+
+        document.getElementById("blowBtn").addEventListener("click", () => {
+            document.getElementById("candles").style.display = "none";
+            document.getElementById("message").style.display = "block";
+        });
+
+
+        // 🍬 Candy Game with hits left
+        let candyClicks = 0;
+        const candy = document.getElementById("candy");
+        const candyMsg = document.getElementById("candyMessage");
+        const candyHint = document.getElementById("candyHint");
+
+        if (candy) {
+            candy.addEventListener("click", () => {
+                candyClicks++;
+                const left = 5 - candyClicks;
+
+                if (left > 0) {
+                    candyHint.textContent = `남은 횟수: ${left}`;
+                } else {
+                    candy.style.display = "none";
+                    candyHint.style.display = "none";
+                    candyMsg.style.display = "block";
+                }
+            });
+        }
+        // 🔮 오늘의 운세
+        const fortunes = {
+            love: [
+                "서로의 마음이 닿는 특별한 하루가 될 거예요. 믿음을 가지고 다가가 보세요! 💞",
+                "사랑은 언제나 당신 곁에 있어요. 오늘은 그 사랑이 더욱 깊어질 거예요. 🌹",
+                "연애운이 최고예요! 누군가에게 웃어줘보세요 😊"
+            ],
+            money: [
+                "작은 지출이 큰 기쁨을 가져다줄 거예요. 💸",
+                "뜻밖의 행운이 당신을 찾아올 수 있어요! 🪙",
+                "지출을 조심하면 좋은 일이 생길 거예요. 💼"
+            ],
+            health: [
+                "가벼운 스트레칭이 큰 도움이 될 거예요. 🧘‍♀️",
+                "따뜻한 물을 많이 마셔보세요. 건강에 좋아요! 💧",
+                "오늘은 일찍 자는 게 좋아요. 😴",
+                "일찍 자고 일찍 먹자🐷🐽"
+            ]
+        };
+
+        const buttons = document.querySelectorAll("#categoryButtons button");
+        const result = document.getElementById("fortuneResult");
+
+        buttons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const type = btn.getAttribute("data-type");
+                const msgs = fortunes[type];
+                const random = msgs[Math.floor(Math.random() * msgs.length)];
+                result.textContent = random;
+            });
+        });
+        // 탭 메뉴 기능
+        const tabs = document.querySelectorAll(".tab");
+        const tabContents = document.querySelectorAll(".tab-content");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                const targetId = tab.getAttribute("data-tab");
+
+                // все вкладки — убрать active
+                tabs.forEach(t => t.classList.remove("active"));
+                tab.classList.add("active");
+
+                // все контенты — скрыть
+                tabContents.forEach(content => {
+                    content.style.display = "none";
+                });
+
+                // показать выбранный
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = "block";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
